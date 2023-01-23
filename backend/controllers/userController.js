@@ -19,7 +19,7 @@ const registerUser = async (req, res) => {
 
     // register new user
     const newUser = await user.save(user)
-    res.json(newUser)
+    res.status(201).json(newUser)
   } catch (error) {
     console.log(error)
   }
@@ -42,7 +42,7 @@ const authenticateUser = async (req, res) => {
 
     // Check password
     if (await userExists.checkPassword(password, userExists.password)) {
-      res.json({
+      res.status(200).json({
         _id: userExists.id,
         name: userExists.name,
         email: userExists.email,
@@ -91,9 +91,9 @@ const forgotPassword = async (req, res) => {
     userExists.token = generateId()
     await userExists.save()
 
-    res.json({ msg: 'Se envió a tu correo las intrucciones' })
+    res.status(200).json({ msg: 'Se envió a tu correo las intrucciones' })
   } catch (error) {
-
+    console.log(error)
   }
 }
 
@@ -103,7 +103,7 @@ const checkToken = async (req, res) => {
     const validToken = await User.findOne({ token })
 
     if (validToken) {
-      res.json({ msg: 'Token válido' })
+      res.status(200).json({ msg: 'Token válido' })
     } else {
       const error = new Error('Token no válido')
       res.status(404).json({ msg: error.message })
@@ -126,7 +126,7 @@ const newPassword = async (req, res) => {
       user.password = password
       user.token = ''
       await user.save()
-      res.json({ msg: 'Contraseña modificado correctamente' })
+      res.status(201).json({ msg: 'La contraseña se modificó correctamente' })
     } else {
       const error = new Error('Token no válido')
       res.status(404).json({ msg: error.message })
@@ -139,7 +139,7 @@ const newPassword = async (req, res) => {
 const profile = async (req, res) => {
   try {
     const { user } = req
-    res.json(user)
+    res.status(200).json(user)
   } catch (error) {
     console.log('error')
   }

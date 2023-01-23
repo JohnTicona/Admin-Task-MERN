@@ -2,6 +2,7 @@ import express from 'express'
 import connectDb from './config/db.js'
 import dotenv from 'dotenv'
 import userRoutes from './routes/userRoutes.js'
+import projectRoutes from './routes/projectRoutes.js'
 
 dotenv.config()
 // connecting the database
@@ -12,6 +13,7 @@ app.use(express.json())
 
 // we define the routes
 app.use('/users', userRoutes)
+app.use('/projects', projectRoutes)
 
 const PORT = process.env.PORT || 4000
 
