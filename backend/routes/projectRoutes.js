@@ -5,7 +5,6 @@ import {
   deleteProject,
   getProject,
   getProjects,
-  getTasks,
   createProject,
   updateProject
 } from '../controllers/projectController.js'
@@ -25,7 +24,6 @@ router
   .put(checkAuth, updateProject)
   .delete(checkAuth, deleteProject)
 
-router.get('/task/:id', checkAuth, getTasks)
 router.post('/add-collaborator/:id', checkAuth, addCollaborator)
 router.post('/delete-collaborator/:id', checkAuth, deleteCollaborator)
 
