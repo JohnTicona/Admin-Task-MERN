@@ -1,33 +1,24 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import AuthLayout from './layouts/AuthLayout'
+import ConfirmAcount from './pages/auth/ConfirmAcount'
+import ForgotPassword from './pages/auth/ForgotPassword'
+import Login from './pages/auth/Login'
+import NewPassword from './pages/auth/NewPassword'
+import Register from './pages/auth/Register'
 
-function App () {
-  const [count, setCount] = useState(0)
-
+const App = () => {
   return (
-    <div className='App'>
-      <div>
-        <a href='https://vitejs.dev' target='_blank' rel='noreferrer'>
-          <img src='/vite.svg' className='logo' alt='Vite logo' />
-        </a>
-        <a href='https://reactjs.org' target='_blank' rel='noreferrer'>
-          <img src={reactLogo} className='logo react' alt='React logo' />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className='card'>
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className='read-the-docs'>
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path='/' element={<AuthLayout />}>
+          <Route index element={<Login />} />
+          <Route path='registrar' element={<Register />} />
+          <Route path='olvide-password' element={<ForgotPassword />} />
+          <Route path='olvide-password/:token' element={<NewPassword />} />
+          <Route path='confirmar/:id' element={<ConfirmAcount />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   )
 }
 
