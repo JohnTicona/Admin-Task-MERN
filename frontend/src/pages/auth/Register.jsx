@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import Alert from '../../components/Alert'
+import clientAxios from '../../config/clientAxios'
 
 const Register = () => {
   const [userForm, setUserForm] = useState({
@@ -8,7 +10,7 @@ const Register = () => {
     password: '',
     repeatPassword: ''
   })
-
+  const [alert, setAlert] = useState({})
   const { name, email, password, repeatPassword } = userForm
 
   const handleChange = (e) => {
@@ -18,10 +20,54 @@ const Register = () => {
     })
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     if ([name, email, password, repeatPassword].includes('')) {
-      console.log('error')
+      return setAlert({
+        msg: 'Todos los campos son obligatorios',
+        error: true
+      })
+    }
+    if (password !== repeatPassword) {
+      return setAlert({
+        msg: 'Las contraseñas no coinciden',
+        error: true
+      })
+    }
+
+    if (password.length < 4) {
+      return setAlert({
+        msg: 'La contraseña es muy corta, agrega mínimo 6 caracteres',
+        error: true
+      })
+    }
+    setAlert({})
+
+    // Create User
+    try {
+      const { data } = await clientAxios.post('/users',
+        {
+          name,
+          email,
+          password
+        }
+      )
+      setAlert({
+        msg: data.msg,
+        error: false
+      })
+
+      setUserForm({
+        name: '',
+        email: '',
+        password: '',
+        repeatPassword: ''
+      })
+    } catch (error) {
+      setAlert({
+        msg: error.response.data.msg,
+        error: true
+      })
     }
   }
 
@@ -31,8 +77,11 @@ const Register = () => {
         Crea tu cuenta y administra tus
         <span className='text-slate-700'> proyectos</span>
       </h1>
-
-      <form onSubmit={handleSubmit} className='my-8 bg-white shadow rounded-lg px-10 p-10 '>
+      {alert.msg && <Alert alert={alert} />}
+      <form
+        onSubmit={handleSubmit}
+        className='my-8 bg-white shadow rounded-lg px-10 p-10 '
+      >
         <div className='mb-5'>
           <label
             htmlFor='name'
@@ -51,14 +100,10 @@ const Register = () => {
           />
         </div>
         <div className='mb-5'>
-          <label
-            htmlFor='email'
-            className='text-base text-gray-600 font-bold block uppercase'
-          >
+          <label className='text-base text-gray-600 font-bold block uppercase'>
             Correo:
           </label>
           <input
-            id='email'
             name='email'
             type='email'
             placeholder='Email de Registro'
