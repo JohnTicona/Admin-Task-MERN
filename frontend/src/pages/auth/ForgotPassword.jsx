@@ -1,34 +1,26 @@
 import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import Alert from '../../components/Alert'
-import clientAxios from '../../config/clientAxios'
+import { ForgotAccountPassword } from '../../redux/slices/auth'
+import { setAlert } from '../../redux/slices/auth/authSlice'
 
-const ForgotPassword = () => {
+export const ForgotPassword = () => {
   const [email, setEmail] = useState('')
-  const [alert, setAlert] = useState({})
+
+  const { alert } = useSelector(state => state.authState)
+  const dispatch = useDispatch()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
 
     if (email === '' || email.length < 6) {
-      setAlert({
+      dispatch(setAlert({
         msg: 'El email es obligatorio',
         error: true
-      })
+      }))
     }
-
-    try {
-      const { data } = await clientAxios.post('/users/forgot-password', { email })
-      setAlert({
-        msg: data.msg,
-        error: false
-      })
-    } catch (error) {
-      setAlert({
-        msg: error.response.data.msg,
-        error: true
-      })
-    }
+    dispatch(ForgotAccountPassword(email))
   }
 
   return (
@@ -82,5 +74,3 @@ const ForgotPassword = () => {
     </>
   )
 }
-
-export default ForgotPassword

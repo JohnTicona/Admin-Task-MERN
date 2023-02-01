@@ -1,0 +1,5 @@
+export * from './Login'
+export * from './Register'
+export * from './ConfirmAcount'
+export * from './ForgotPassword'
+export * from './NewPassword'

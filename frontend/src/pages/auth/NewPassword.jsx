@@ -1,56 +1,41 @@
 import { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link, useParams } from 'react-router-dom'
 import Alert from '../../components/Alert'
-import clientAxios from '../../config/clientAxios'
+import { ChangePassword, CheckToken, setAlert } from '../../redux/slices/auth'
 
-const NewPassword = () => {
+export const NewPassword = () => {
   const [password, setPassword] = useState('')
   const [validToken, setvalidToken] = useState(false)
   const [passwordModified, setPasswordModified] = useState(false)
-  const [alert, setAlert] = useState({})
 
   const { token } = useParams()
 
+  const { alert } = useSelector(state => state.authState)
+  const dispatch = useDispatch()
+
   useEffect(() => {
-    const checkToken = async () => {
-      try {
-        await clientAxios(`/users/forgot-password/${token}`)
-        setvalidToken(true)
-      } catch (error) {
-        setAlert({
-          msg: error.response.data.msg,
-          error: true
-        })
-      }
+    dispatch(CheckToken(token))
+    if (!alert.error) {
+      setvalidToken(true)
     }
-    checkToken()
   }, [])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    if (password.length < 6) {
-      return setAlert({
-        msg: 'La contraseña debe ser mínimo de 6 caracteres',
+    if (password.length < 4) {
+      return dispatch(setAlert({
+        msg: 'La contraseña debe ser mínimo de 4 caracteres',
         error: true
-      })
+      }))
     }
 
-    try {
-      const url = `/users/forgot-password/${token}`
-      const { data } = await clientAxios.post(url, { password })
-      setAlert({
-        msg: data.msg,
-        error: false
-      })
-
-      setPasswordModified(true)
-    } catch (error) {
-      setAlert({
-        msg: error.response.data.msg,
-        error: true
-      })
-    }
+    dispatch(ChangePassword(token, password))
+    setPasswordModified(true)
+    setTimeout(() => {
+      dispatch(setAlert({}))
+    }, 3000)
   }
 
   return (
@@ -96,5 +81,3 @@ const NewPassword = () => {
     </>
   )
 }
-
-export default NewPassword

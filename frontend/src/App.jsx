@@ -1,12 +1,18 @@
+import { useEffect } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import AuthLayout from './layouts/AuthLayout'
-import ConfirmAcount from './pages/auth/ConfirmAcount'
-import ForgotPassword from './pages/auth/ForgotPassword'
-import Login from './pages/auth/Login'
-import NewPassword from './pages/auth/NewPassword'
-import Register from './pages/auth/Register'
+import { AuthLayout, ProtectedRoutes } from './layouts'
+import { Login, Register, ConfirmAcount, ForgotPassword, NewPassword } from './pages/auth'
+import { AuthUser } from './redux/slices/auth'
+import { useDispatch } from 'react-redux'
+import { Projects } from './pages/Projects'
 
 const App = () => {
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(AuthUser())
+  }, [])
+
   return (
     <BrowserRouter>
       <Routes>
@@ -16,6 +22,9 @@ const App = () => {
           <Route path='olvide-password' element={<ForgotPassword />} />
           <Route path='olvide-password/:token' element={<NewPassword />} />
           <Route path='confirmar/:token' element={<ConfirmAcount />} />
+        </Route>
+        <Route path='proyectos' element={<ProtectedRoutes />}>
+          <Route index element={<Projects />} />
         </Route>
       </Routes>
     </BrowserRouter>

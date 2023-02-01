@@ -1,6 +1,13 @@
-import { Outlet } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { Outlet, Navigate } from 'react-router-dom'
 
-const AuthLayout = () => {
+export const AuthLayout = () => {
+  const { user } = useSelector(state => state.authState)
+
+  if (user._id) {
+    return <Navigate to='/proyectos' />
+  }
+
   return (
     <>
       <main className='min-h-screen flex justify-center items-center p-5'>
@@ -11,5 +18,3 @@ const AuthLayout = () => {
     </>
   )
 }
-
-export default AuthLayout

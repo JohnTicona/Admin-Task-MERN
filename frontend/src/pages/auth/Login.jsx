@@ -1,33 +1,40 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { Link, useNavigate } from 'react-router-dom'
 import Alert from '../../components/Alert'
-import clientAxios from '../../config/clientAxios'
+import { LoginUser, setAlert } from '../../redux/slices/auth'
 
-const Login = () => {
+export const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [alert, setAlert] = useState({})
+
+  const { user, loading, alert } = useSelector(state => state.authState)
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+
+  // useEffect(() => {
+  //   if (user && user._id) {
+  //     navigate('/proyectos')
+  //   }
+  // }, [user])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
 
     if ([email, password].includes('')) {
-      return setAlert({
+      return dispatch(setAlert({
         msg: 'Todos los campos son obligatorios',
         error: true
-      })
+      }))
     }
+    dispatch(LoginUser(email, password))
+    if (user._id) {
+      navigate('/proyectos')
+    }
+  }
 
-    try {
-      const { data } = await clientAxios.post('/users/login', { email, password })
-      window.localStorage.setItem('token', data.token)
-      setAlert({})
-    } catch (error) {
-      setAlert({
-        msg: error.response.data.msg,
-        error: true
-      })
-    }
+  if (loading) {
+    return 'Cargando'
   }
 
   return (
@@ -96,5 +103,3 @@ const Login = () => {
     </>
   )
 }
-
-export default Login

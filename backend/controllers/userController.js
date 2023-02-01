@@ -146,7 +146,7 @@ const newPassword = async (req, res) => {
       user.password = password
       user.token = ''
       await user.save()
-      res.status(201).json({ msg: 'La contraseña se modificó correctamente' })
+      res.status(201).json({ msg: 'La contraseña se modificó correctamente, Inicia Sesión' })
     } else {
       const error = new Error('Token no válido')
       res.status(404).json({ msg: error.message })

@@ -1,17 +1,20 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { RegisterUser, setAlert } from '../../redux/slices/auth'
 import Alert from '../../components/Alert'
-import clientAxios from '../../config/clientAxios'
 
-const Register = () => {
+export const Register = () => {
   const [userForm, setUserForm] = useState({
     name: '',
     email: '',
     password: '',
     repeatPassword: ''
   })
-  const [alert, setAlert] = useState({})
   const { name, email, password, repeatPassword } = userForm
+
+  const { alert } = useSelector(state => state.authState)
+  const dispatch = useDispatch()
 
   const handleChange = (e) => {
     setUserForm({
@@ -23,52 +26,35 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     if ([name, email, password, repeatPassword].includes('')) {
-      return setAlert({
+      return dispatch(setAlert({
         msg: 'Todos los campos son obligatorios',
         error: true
-      })
+      }))
     }
     if (password !== repeatPassword) {
-      return setAlert({
+      return dispatch(setAlert({
         msg: 'Las contraseñas no coinciden',
         error: true
-      })
+      }))
     }
 
     if (password.length < 4) {
-      return setAlert({
-        msg: 'La contraseña es muy corta, agrega mínimo 6 caracteres',
+      return dispatch(setAlert({
+        msg: 'La contraseña es muy corta, agrega mínimo 4 caracteres',
         error: true
-      })
+      }))
     }
-    setAlert({})
+    dispatch(setAlert({}))
 
     // Create User
-    try {
-      const { data } = await clientAxios.post('/users',
-        {
-          name,
-          email,
-          password
-        }
-      )
-      setAlert({
-        msg: data.msg,
-        error: false
-      })
+    dispatch(RegisterUser(name, email, password))
 
-      setUserForm({
-        name: '',
-        email: '',
-        password: '',
-        repeatPassword: ''
-      })
-    } catch (error) {
-      setAlert({
-        msg: error.response.data.msg,
-        error: true
-      })
-    }
+    setUserForm({
+      name: '',
+      email: '',
+      password: '',
+      repeatPassword: ''
+    })
   }
 
   return (
@@ -170,5 +156,3 @@ const Register = () => {
     </>
   )
 }
-
-export default Register
