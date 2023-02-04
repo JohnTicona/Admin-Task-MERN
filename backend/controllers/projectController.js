@@ -1,5 +1,4 @@
 import Project from '../models/Project.js'
-import Task from '../models/Task.js'
 
 const getProjects = async (req, res) => {
   try {
@@ -36,13 +35,7 @@ const getProject = async (req, res) => {
       return res.status(401).json({ msg: error.message })
     }
 
-    // get tasks of project
-    const task = await Task.find({ project: project._id })
-
-    res.status(200).json({
-      project, task
-    })
-    // res.status(200).json(project)
+    res.status(200).json(project)
   } catch (error) {
     console.log(error)
   }

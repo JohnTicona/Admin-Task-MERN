@@ -5,6 +5,7 @@ import cors from 'cors'
 import userRoutes from './routes/userRoutes.js'
 import projectRoutes from './routes/projectRoutes.js'
 import taskRoutes from './routes/taskRoutes.js'
+import morgan from 'morgan'
 
 dotenv.config()
 // connecting the database
@@ -24,6 +25,7 @@ const corsOptions = {
 }
 const app = express()
 app.use(express.json())
+app.use(morgan('dev'))
 app.use(cors(corsOptions))
 
 // we define the routes
