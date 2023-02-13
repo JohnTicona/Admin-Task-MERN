@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import Alert from '../../components/Alert'
@@ -15,7 +16,7 @@ export const ForgotPassword = () => {
     e.preventDefault()
 
     if (email === '' || email.length < 6) {
-      dispatch(setAlert({
+      return dispatch(setAlert({
         msg: 'El email es obligatorio',
         error: true
       }))
@@ -23,9 +24,13 @@ export const ForgotPassword = () => {
     dispatch(ForgotAccountPassword(email))
   }
 
+  useEffect(() => {
+    dispatch(setAlert({}))
+  }, [])
+
   return (
     <>
-      <h1 className='text-emerald-500 text-center font-black text-5xl capitalize'>
+      <h1 className='text-emerald-500 text-center font-black text-5xl capitalize mb-5'>
         Recupera tu acceso y no pierdas tus
         <span className='text-slate-700'> proyectos</span>
       </h1>

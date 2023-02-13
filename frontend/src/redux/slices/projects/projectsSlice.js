@@ -33,6 +33,7 @@ export const projectsSlice = createSlice({
     },
     setCurrentProject: (state, action) => {
       state.currentProject = action.payload
+      state.loading = false
     },
     setLoading: (state, action) => {
       state.loading = action.payload

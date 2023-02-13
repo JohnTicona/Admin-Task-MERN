@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import Alert from '../../components/Alert'
@@ -17,6 +17,9 @@ export const Login = () => {
   //     navigate('/proyectos')
   //   }
   // }, [user])
+  useEffect(() => {
+    dispatch(setAlert({}))
+  }, [])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -39,7 +42,7 @@ export const Login = () => {
 
   return (
     <>
-      <h1 className='text-emerald-500 text-center font-black text-4xl md:text-5xl capitalize'>
+      <h1 className='text-emerald-500 text-center font-black text-4xl md:text-5xl capitalize mb-5'>
         Inicia Sesión y administra tus
         <span className='text-slate-700'> proyectos</span>
       </h1>

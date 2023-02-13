@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { RegisterUser, setAlert } from '../../redux/slices/auth'
@@ -15,6 +15,10 @@ export const Register = () => {
 
   const { alert } = useSelector(state => state.authState)
   const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(setAlert({}))
+  }, [])
 
   const handleChange = (e) => {
     setUserForm({
@@ -59,7 +63,7 @@ export const Register = () => {
 
   return (
     <>
-      <h1 className='text-emerald-500 text-center font-black text-4xl capitalize'>
+      <h1 className='text-emerald-500 text-center font-black text-4xl capitalize mb-5'>
         Crea tu cuenta y administra tus
         <span className='text-slate-700'> proyectos</span>
       </h1>

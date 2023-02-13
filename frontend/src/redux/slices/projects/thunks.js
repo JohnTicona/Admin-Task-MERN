@@ -1,4 +1,5 @@
 import clientAxios from '../../../config/clientAxios'
+import Swal from 'sweetalert2'
 import {
   setAlert,
   getProjects,
@@ -50,7 +51,6 @@ export const getProject = (id) => {
       dispatch(setCurrentProject(data))
     } catch (error) {
       console.log(error)
-    } finally {
       dispatch(setLoading(false))
     }
   }
@@ -72,15 +72,12 @@ export const createProject = (project, navigate) => {
       }
       const { data } = await clientAxios.post('/projects', project, config)
       dispatch(setProjects(data))
-      dispatch(
-        showAlert({
-          msg: 'Proyecto creado correctamente',
-          error: false
-        })
+      await Swal.fire(
+        'Éxito',
+        'Proyecto creado correctamente',
+        'success'
       )
-      setTimeout(() => {
-        navigate('/proyectos')
-      }, 3000)
+      navigate('/proyectos')
     } catch (error) {
       console.log(error)
     }
@@ -103,15 +100,12 @@ export const updateProject = (project, navigate) => {
       }
       const { data } = await clientAxios.put(`/projects/${project.id}`, project, config)
       dispatch(setUpdateProject(data))
-      dispatch(
-        showAlert({
-          msg: 'Proyecto editado correctamente',
-          error: false
-        })
+      await Swal.fire(
+        'Actualizado',
+        'Proyecto editado correctamente',
+        'success'
       )
-      setTimeout(() => {
-        navigate('/proyectos')
-      }, 3000)
+      navigate('/proyectos')
     } catch (error) {
       console.log(error)
     }
@@ -121,28 +115,39 @@ export const updateProject = (project, navigate) => {
 export const deleteProject = (id, navigate) => {
   return async (dispatch) => {
     try {
-      const token = window.localStorage.getItem('token')
-      if (!token) {
-        return
-      }
+      const result = await Swal.fire({
+        title: '¿Estás seguro?',
+        text: '¡Un proyecto eliminado no se puede recuperar!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: '¡Si, eliminar!',
+        cancelButtonText: 'Cancelar'
+      })
 
-      const config = {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
+      if (result.isConfirmed) {
+        const token = window.localStorage.getItem('token')
+        if (!token) {
+          return
         }
+
+        const config = {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          }
+        }
+        await clientAxios.delete(`/projects/${id}`, config)
+        await dispatch(setDeleteProject(id))
+
+        await Swal.fire(
+          'Éxito',
+          'Proyecto eliminado correctamente',
+          'success'
+        )
+        navigate('/proyectos')
       }
-      await clientAxios.delete(`/projects/${id}`, config)
-      await dispatch(setDeleteProject(id))
-      navigate('/proyectos')
-      // dispatch(
-      //   showAlert({
-      //     msg: 'Proyecto editado correctamente',
-      //     error: false
-      //   })
-      // )
-      // setTimeout(() => {
-      // }, 3000)
     } catch (error) {
       console.log(error)
     }

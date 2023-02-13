@@ -40,7 +40,7 @@ export const NewPassword = () => {
 
   return (
     <>
-      <h1 className='text-emerald-500 text-center font-black text-5xl capitalize'>
+      <h1 className='text-emerald-500 text-center font-black text-5xl capitalize mb-5'>
         Reestablece tu contraseña y recupera tu
         <span className='text-slate-700'> acceso</span>
       </h1>

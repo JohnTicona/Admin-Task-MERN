@@ -64,10 +64,10 @@ export const FormProject = ({ currentProject }) => {
   return (
     <form
       onSubmit={handleSubmit}
-      className='bg-white py-8 px-6 md:w-1/2 rounded-lg shadow'
+      className='bg-white py-8 px-6 w-full lg:w-1/2 rounded-lg shadow'
     >
       {alert.msg && <Alert alert={alert} />}
-      <div className='mb-5'>
+      <div className='mt-5 mb-5'>
         <label
           htmlFor='name'
           className='text-gray-700 uppercase font-bold text-sm'
