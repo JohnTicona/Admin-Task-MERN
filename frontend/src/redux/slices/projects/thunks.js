@@ -7,7 +7,8 @@ import {
   setCurrentProject,
   setLoading,
   setUpdateProject,
-  setDeleteProject
+  setDeleteProject,
+  setTasks
 } from './projectsSlice'
 
 export const getAllProjects = () => {
@@ -70,13 +71,9 @@ export const createProject = (project, navigate) => {
           Authorization: `Bearer ${token}`
         }
       }
-      const { data } = await clientAxios.post('/projects', project, config)
+      const { data } = await clientAxios.post('/task', project, config)
       dispatch(setProjects(data))
-      await Swal.fire(
-        'Éxito',
-        'Proyecto creado correctamente',
-        'success'
-      )
+      await Swal.fire('Éxito', 'Proyecto creado correctamente', 'success')
       navigate('/proyectos')
     } catch (error) {
       console.log(error)
@@ -98,7 +95,11 @@ export const updateProject = (project, navigate) => {
           Authorization: `Bearer ${token}`
         }
       }
-      const { data } = await clientAxios.put(`/projects/${project.id}`, project, config)
+      const { data } = await clientAxios.put(
+        `/projects/${project.id}`,
+        project,
+        config
+      )
       dispatch(setUpdateProject(data))
       await Swal.fire(
         'Actualizado',
@@ -141,11 +142,7 @@ export const deleteProject = (id, navigate) => {
         await clientAxios.delete(`/projects/${id}`, config)
         await dispatch(setDeleteProject(id))
 
-        await Swal.fire(
-          'Éxito',
-          'Proyecto eliminado correctamente',
-          'success'
-        )
+        await Swal.fire('Éxito', 'Proyecto eliminado correctamente', 'success')
         navigate('/proyectos')
       }
     } catch (error) {
@@ -161,6 +158,28 @@ export const showAlert = (alert) => {
       setTimeout(() => {
         dispatch(setAlert({}))
       }, 3000)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+}
+
+export const createTask = (task) => {
+  return async (dispatch) => {
+    try {
+      const token = window.localStorage.getItem('token')
+      if (!token) {
+        return
+      }
+
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      }
+      const { data } = await clientAxios.post('/tasks', task, config)
+      dispatch(setTasks(data))
     } catch (error) {
       console.log(error)
     }

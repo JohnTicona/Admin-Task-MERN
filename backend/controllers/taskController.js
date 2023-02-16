@@ -19,6 +19,10 @@ const createTask = async (req, res) => {
     }
 
     const newTask = await Task.create(req.body)
+
+    projectExists.tasks.push(newTask._id)
+    await projectExists.save()
+
     res.status(201).json(newTask)
   } catch (error) {
     console.log(error)

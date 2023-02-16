@@ -2,9 +2,11 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
   projects: [],
+  tasks: [],
   alert: {},
   currentProject: {},
-  loading: false
+  loading: false,
+  modal: false
 }
 
 export const projectsSlice = createSlice({
@@ -37,8 +39,15 @@ export const projectsSlice = createSlice({
     },
     setLoading: (state, action) => {
       state.loading = action.payload
+    },
+    setModal: (state) => {
+      state.modal = !state.modal
+      state.alert = {}
+    },
+    setTasks: (state, action) => {
+      state.tasks = [...state.tasks, action.payload]
+      state.modal = false
     }
-
   }
 })
 
@@ -49,5 +58,7 @@ export const {
   setCurrentProject,
   setLoading,
   setUpdateProject,
-  setDeleteProject
+  setDeleteProject,
+  setModal,
+  setTasks
 } = projectsSlice.actions

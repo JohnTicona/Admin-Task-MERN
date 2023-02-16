@@ -12,11 +12,6 @@ export const Login = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  // useEffect(() => {
-  //   if (user && user._id) {
-  //     navigate('/proyectos')
-  //   }
-  // }, [user])
   useEffect(() => {
     dispatch(setAlert({}))
   }, [])

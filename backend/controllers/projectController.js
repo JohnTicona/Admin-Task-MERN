@@ -2,7 +2,7 @@ import Project from '../models/Project.js'
 
 const getProjects = async (req, res) => {
   try {
-    const projects = await Project.find({ creator: req.user._id })
+    const projects = await Project.find({ creator: req.user._id }).populate('tasks')
     res.status(200).json(projects)
   } catch (error) {
     console.log(error)
