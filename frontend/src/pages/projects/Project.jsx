@@ -2,7 +2,8 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useParams } from 'react-router-dom'
 import { getProject, setModal } from '../../redux/slices/projects'
-import { ModalFormTask } from './ModalFormTask'
+import { ModalFormTask } from '../tasks/ModalFormTask'
+import { Task } from '../tasks/Task'
 
 export const Project = () => {
   const { id } = useParams()
@@ -67,6 +68,16 @@ export const Project = () => {
         </svg>
         Nueva Tarea
       </button>
+
+      <p className='font-bold text-xl mt-10'>Tareas del Proyecto</p>
+
+      <div className='bg-white shadow mt-10 rounded-lg'>
+        {currentProject.tasks?.length
+          ? currentProject.tasks?.map(task => (
+            <Task key={task._id} task={task} />
+          ))
+          : <p className='text-center my-5 p-10'>No hay tareas en este proyecto</p>}
+      </div>
       <ModalFormTask />
     </>
   )

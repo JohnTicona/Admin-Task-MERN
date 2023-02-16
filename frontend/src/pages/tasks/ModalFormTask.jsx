@@ -1,7 +1,7 @@
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { useDispatch, useSelector } from 'react-redux'
-import { createTask, setAlert, setModal } from '../../redux/slices/projects'
+import { createTask, setAlert, setModal, updateTask } from '../../redux/slices/projects'
 import Alert from '../../components/Alert'
 import { useParams } from 'react-router-dom'
 
@@ -16,10 +16,29 @@ export const ModalFormTask = () => {
   })
   const { name, description, priority, deliveryDate } = task
 
-  const { modal, alert } = useSelector((state) => state.projectsState)
+  const { modal, alert, currentTask } = useSelector(
+    (state) => state.projectsState
+  )
   const dispatch = useDispatch()
 
   const { id } = useParams()
+
+  useEffect(() => {
+    if (currentTask?._id) {
+      return setTask({
+        name: currentTask.name,
+        description: currentTask.description,
+        priority: currentTask.priority,
+        deliveryDate: currentTask.deliveryDate.split('T')[0]
+      })
+    }
+    setTask({
+      name: '',
+      description: '',
+      priority: '',
+      deliveryDate: ''
+    })
+  }, [currentTask])
 
   const handleChange = (e) => {
     setTask({
@@ -28,7 +47,7 @@ export const ModalFormTask = () => {
     })
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
 
     if ([name, description, priority].includes('')) {
@@ -40,9 +59,18 @@ export const ModalFormTask = () => {
       )
     }
 
-    dispatch(createTask({ ...task, project: id }))
+    if (currentTask?._id) {
+      await dispatch(updateTask({ ...task, id: currentTask._id, project: id }))
+    } else {
+      await dispatch(createTask({ ...task, project: id }))
+    }
 
-    console.log(id)
+    setTask({
+      name: '',
+      description: '',
+      priority: '',
+      deliveryDate: ''
+    })
   }
 
   return (
@@ -113,7 +141,7 @@ export const ModalFormTask = () => {
                     as='h3'
                     className='text-lg uppercase leading-6 font-bold text-gray-900 mb-5'
                   >
-                    Crear Tarea
+                    {currentTask._id ? 'Editar Tarea' : 'Crear tarea'}
                   </Dialog.Title>
 
                   {alert.msg && <Alert alert={alert} />}
@@ -195,6 +223,7 @@ export const ModalFormTask = () => {
                     <input
                       type='submit'
                       className='bg-emerald-600 hover:bg-emerald-700 text-white w-full font-bold cursor-pointer transition-colors rounded p-3 uppercase'
+                      value={currentTask._id ? 'Guardar cambios' : 'Crear tarea'}
                     />
                   </form>
                 </div>

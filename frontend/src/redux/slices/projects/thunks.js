@@ -8,7 +8,9 @@ import {
   setLoading,
   setUpdateProject,
   setDeleteProject,
-  setTasks
+  setTasks,
+  setUpdateTask,
+  setDeleteTask
 } from './projectsSlice'
 
 export const getAllProjects = () => {
@@ -121,8 +123,8 @@ export const deleteProject = (id, navigate) => {
         text: '¡Un proyecto eliminado no se puede recuperar!',
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
+        confirmButtonColor: '#4f46e5',
+        cancelButtonColor: '#dc2626',
         confirmButtonText: '¡Si, eliminar!',
         cancelButtonText: 'Cancelar'
       })
@@ -180,6 +182,69 @@ export const createTask = (task) => {
       }
       const { data } = await clientAxios.post('/tasks', task, config)
       dispatch(setTasks(data))
+    } catch (error) {
+      console.log(error)
+    }
+  }
+}
+
+export const updateTask = (task) => {
+  return async (dispatch) => {
+    try {
+      const token = window.localStorage.getItem('token')
+      if (!token) {
+        return
+      }
+
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      }
+      const { data } = await clientAxios.put(`/tasks/${task.id}`, task, config)
+      dispatch(setUpdateTask(data))
+    } catch (error) {
+      console.log(error)
+    }
+  }
+}
+
+export const deleteTask = (taskId) => {
+  return async (dispatch) => {
+    try {
+      const result = await Swal.fire({
+        title: '¿Estás seguro?',
+        text: 'Una tarea eliminada no se puede recuperar',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#4f46e5',
+        cancelButtonColor: '#dc2626',
+        confirmButtonText: '¡Si, eliminar!',
+        cancelButtonText: 'Cancelar'
+      })
+
+      if (result.isConfirmed) {
+        const token = window.localStorage.getItem('token')
+        if (!token) {
+          return
+        }
+
+        const config = {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          }
+        }
+        await clientAxios.delete(`/tasks/${taskId}`, config)
+        Swal.fire(
+          'Eliminado',
+          'Tarea eliminada correctamente',
+          'success'
+        )
+        dispatch(setDeleteTask(taskId))
+      }
+      // dispatch(setUpdateTask(data))
     } catch (error) {
       console.log(error)
     }

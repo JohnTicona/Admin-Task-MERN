@@ -2,7 +2,7 @@ import Project from '../models/Project.js'
 
 const getProjects = async (req, res) => {
   try {
-    const projects = await Project.find({ creator: req.user._id }).populate('tasks')
+    const projects = await Project.find({ creator: req.user._id })
     res.status(200).json(projects)
   } catch (error) {
     console.log(error)
@@ -24,7 +24,7 @@ const createProject = async (req, res) => {
 const getProject = async (req, res) => {
   try {
     const { id } = req.params
-    const project = await Project.findById(id)
+    const project = await Project.findById(id).populate('tasks')
 
     if (!project) {
       const error = new Error('Proyecto no encontrado')

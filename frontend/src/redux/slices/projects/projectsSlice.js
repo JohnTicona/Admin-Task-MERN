@@ -2,11 +2,13 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
   projects: [],
-  tasks: [],
   alert: {},
   currentProject: {},
+  currentTask: {},
   loading: false,
-  modal: false
+  modal: false,
+  modalDelete: false,
+  idDeleteTask: ''
 }
 
 export const projectsSlice = createSlice({
@@ -26,8 +28,8 @@ export const projectsSlice = createSlice({
       )
     },
     setDeleteProject: (state, action) => {
-      state.projects = state.projects.filter((project) =>
-        project._id !== action.payload
+      state.projects = state.projects.filter(
+        (project) => project._id !== action.payload
       )
     },
     setAlert: (state, action) => {
@@ -43,10 +45,35 @@ export const projectsSlice = createSlice({
     setModal: (state) => {
       state.modal = !state.modal
       state.alert = {}
+      state.currentTask = {}
     },
     setTasks: (state, action) => {
-      state.tasks = [...state.tasks, action.payload]
+      state.currentProject.tasks = [
+        ...state.currentProject.tasks,
+        action.payload
+      ]
       state.modal = false
+    },
+    setCurrentTask: (state, action) => {
+      state.currentTask = action.payload
+      state.modal = true
+    },
+    setUpdateTask: (state, action) => {
+      state.currentProject = {
+        ...state.currentProject,
+        tasks: state.currentProject.tasks.map((task) =>
+          task._id === action.payload._id ? action.payload : task
+        )
+      }
+      state.modal = false
+    },
+    setDeleteTask: (state, action) => {
+      state.currentProject = {
+        ...state.currentProject,
+        tasks: state.currentProject.tasks.filter(
+          (task) => task._id !== action.payload
+        )
+      }
     }
   }
 })
@@ -60,5 +87,8 @@ export const {
   setUpdateProject,
   setDeleteProject,
   setModal,
-  setTasks
+  setTasks,
+  setCurrentTask,
+  setUpdateTask,
+  setDeleteTask
 } = projectsSlice.actions
