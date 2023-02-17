@@ -2,11 +2,12 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import Alert from '../../components/Alert'
+import { Spinner } from '../../components/Spinner'
 import { LoginUser, setAlert } from '../../redux/slices/auth'
 
 export const Login = () => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState('emailprueba@correo.com')
+  const [password, setPassword] = useState('123456')
 
   const { user, loading, alert } = useSelector(state => state.authState)
   const dispatch = useDispatch()
@@ -32,7 +33,7 @@ export const Login = () => {
   }
 
   if (loading) {
-    return 'Cargando'
+    return <Spinner />
   }
 
   return (

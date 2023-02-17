@@ -244,7 +244,29 @@ export const deleteTask = (taskId) => {
         )
         dispatch(setDeleteTask(taskId))
       }
-      // dispatch(setUpdateTask(data))
+    } catch (error) {
+      console.log(error)
+    }
+  }
+}
+
+export const changeStateTask = (taskId) => {
+  return async (dispatch) => {
+    try {
+      const token = window.localStorage.getItem('token')
+      if (!token) {
+        return
+      }
+
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      }
+
+      const { data } = await clientAxios.post(`/tasks/state/${taskId}`, {}, config)
+      dispatch(setUpdateTask(data))
     } catch (error) {
       console.log(error)
     }

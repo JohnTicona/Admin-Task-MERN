@@ -53,6 +53,7 @@ export const projectsSlice = createSlice({
         action.payload
       ]
       state.modal = false
+      state.alert = {}
     },
     setCurrentTask: (state, action) => {
       state.currentTask = action.payload
@@ -74,6 +75,16 @@ export const projectsSlice = createSlice({
           (task) => task._id !== action.payload
         )
       }
+    },
+    resetProjectState: (state) => {
+      state.projects = []
+      state.alert = {}
+      state.currentProject = {}
+      state.currentTask = {}
+      state.loading = false
+      state.modal = false
+      state.modalDelete = false
+      state.idDeleteTask = ''
     }
   }
 })
@@ -90,5 +101,6 @@ export const {
   setTasks,
   setCurrentTask,
   setUpdateTask,
-  setDeleteTask
+  setDeleteTask,
+  resetProjectState
 } = projectsSlice.actions

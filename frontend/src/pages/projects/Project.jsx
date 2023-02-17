@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useParams } from 'react-router-dom'
+import { Spinner } from '../../components/Spinner'
 import { getProject, setModal } from '../../redux/slices/projects'
 import { ModalFormTask } from '../tasks/ModalFormTask'
 import { Task } from '../tasks/Task'
@@ -22,7 +23,7 @@ export const Project = () => {
   }, [])
 
   if (loading) {
-    return 'Cargando'
+    return <Spinner />
   }
 
   return (

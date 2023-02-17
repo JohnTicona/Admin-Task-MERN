@@ -23,8 +23,15 @@ export const authSlice = createSlice({
     },
     setAlert: (state, action) => {
       state.alert = action.payload
+    },
+    resetAuthState: (state) => {
+      state.user = {
+        _id: '',
+        name: '',
+        email: ''
+      }
     }
   }
 })
 
-export const { setAuth, setLoading, setAlert } = authSlice.actions
+export const { setAuth, setLoading, setAlert, resetAuthState } = authSlice.actions

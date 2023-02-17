@@ -92,14 +92,38 @@ const deleteTask = async (req, res) => {
       return res.status(403).json({ msg: error.message })
     }
 
-    await task.deleteOne()
+    const project = await Project.findById(task.project)
+    project.tasks.pull(task._id)
+
+    await Promise.allSettled([await project.save(), await task.deleteOne()])
+
     res.status(200).json({ msg: 'Tarea eliminada' })
   } catch (error) {
     console.log(error)
   }
 }
 
-const changeState = async (req, res) => {}
+const changeState = async (req, res) => {
+  try {
+    const { id } = req.params
+    const task = await Task.findById(id).populate('project')
+
+    if (!task) {
+      const error = new Error('Tarea no encontrada')
+      return res.status(404).json({ msg: error.message })
+    }
+
+    if (task.project.creator.toString() !== req.user._id.toString()) {
+      const error = new Error('Acción no válida')
+      return res.status(403).json({ msg: error.message })
+    }
+    task.state = !task.state
+    await task.save()
+    res.status(200).json(task)
+  } catch (error) {
+    console.log(error)
+  }
+}
 
 export {
   createTask,

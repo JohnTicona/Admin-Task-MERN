@@ -1,5 +1,9 @@
 import { useDispatch } from 'react-redux'
-import { deleteTask, setCurrentTask } from '../../redux/slices/projects'
+import {
+  changeStateTask,
+  deleteTask,
+  setCurrentTask
+} from '../../redux/slices/projects'
 import { formatDate } from '../../helpers/formatDate'
 
 export const Task = ({ task }) => {
@@ -30,19 +34,17 @@ export const Task = ({ task }) => {
           Editar
         </button>
 
-        {state
-          ? (
-            <button className='bg-emerald-600 px-4 py-3 text-white uppercase font-bold text-sm rounded-lg'>
-              Completa
-            </button>
-            )
-          : (
-            <button className='bg-gray-600 px-4 py-3 text-white uppercase font-bold text-sm rounded-lg'>
-              Incompleta
-            </button>
-            )}
+        <button
+          onClick={() => dispatch(changeStateTask(task._id))}
+          className={`${state ? 'bg-emerald-600' : 'bg-gray-600'} px-4 py-3 text-white uppercase font-bold text-sm rounded-lg`}
+        >
+          {state ? 'Completa' : 'Incompleta'}
+        </button>
 
-        <button onClick={() => handleDeleteTask(task._id)} className='bg-red-600 px-4 py-3 text-white uppercase font-bold text-sm rounded-lg'>
+        <button
+          onClick={() => handleDeleteTask(task._id)}
+          className='bg-red-600 px-4 py-3 text-white uppercase font-bold text-sm rounded-lg'
+        >
           Eliminar
         </button>
       </div>

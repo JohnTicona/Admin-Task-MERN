@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
+import { Spinner } from '../../components/Spinner'
 import { deleteProject, getProject } from '../../redux/slices/projects'
 import { FormProject } from './FormProject'
 
@@ -25,7 +26,7 @@ export const EditProject = () => {
   }
 
   if (loading) {
-    return 'Cargando'
+    return <Spinner />
   }
 
   return (
