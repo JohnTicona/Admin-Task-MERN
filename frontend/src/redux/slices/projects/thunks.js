@@ -73,7 +73,7 @@ export const createProject = (project, navigate) => {
           Authorization: `Bearer ${token}`
         }
       }
-      const { data } = await clientAxios.post('/task', project, config)
+      const { data } = await clientAxios.post('/projects', project, config)
       dispatch(setProjects(data))
       await Swal.fire('Éxito', 'Proyecto creado correctamente', 'success')
       navigate('/proyectos')

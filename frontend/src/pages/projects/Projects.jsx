@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Spinner } from '../../components/Spinner'
 import { getAllProjects } from '../../redux/slices/projects'
 import { PreviewProject } from './PreviewProject'
 
@@ -23,7 +22,9 @@ export const Projects = () => {
               ))
             )
           : (
-            <Spinner />
+            <p className='text-center text-gray-600 uppercase p-5'>
+              No hay proyectos, comienza creando uno
+            </p>
             )}
       </div>
     </>
