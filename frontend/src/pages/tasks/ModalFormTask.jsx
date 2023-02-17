@@ -136,7 +136,7 @@ export const ModalFormTask = () => {
               </div>
 
               <div className='sm:flex sm:items-start'>
-                <div className='mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full'>
+                <div className='mt-3 sm:mt-0 sm:ml-4 w-full'>
                   <Dialog.Title
                     as='h3'
                     className='text-lg uppercase leading-6 font-bold text-gray-900 mb-5'
